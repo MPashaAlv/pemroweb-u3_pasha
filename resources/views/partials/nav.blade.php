@@ -1,33 +1,36 @@
 
-<header class="site-header">
+<header class="header">
 
-    <!-- Topbar -->
-    <div class="topbar">
-        <span>INDEPENDENT DIGITAL JOURNAL</span>
-
+    <div class="header-top">
+        <span>PORTAL BERITA DIGITAL</span>
         <span>{{ now()->translatedFormat('l, d F Y') }}</span>
     </div>
 
-    <!-- Brand -->
-    <div class="masthead">
-        <a href="{{ route('home') }}" class="brand">
-            THE DAILY<span>.</span>
+    <div class="brand-section">
+
+        <a href="{{ route('home') }}" class="brand-logo">
+            PORTAL<span>.</span>
         </a>
 
-        <p class="brand-description">
-            STORIES THAT MATTER.
+        <p class="brand-tagline">
+            INFORMASI · INSPIRASI · PERSPEKTIF
         </p>
+
+        <span class="creator-label">
+            Dibuat oleh M.Pasha
+        </span>
+
     </div>
 
-    <!-- Navigation -->
-    <nav class="main-nav">
+    <nav class="navigation">
 
         <a href="{{ route('home') }}"
            class="{{ request()->routeIs('home') ? 'active' : '' }}">
-            Home
+            Beranda
         </a>
 
         @auth
+
             <a href="{{ route('dashboard') }}"
                class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 Dashboard
@@ -37,20 +40,25 @@
                class="{{ request()->routeIs('articles.*') ? 'active' : '' }}">
                 Artikel
             </a>
+
         @endauth
 
-        <div class="nav-right">
+        <div class="navigation-right">
 
             @guest
-                <a href="{{ route('login') }}">Login</a>
-                <a href="{{ route('register') }}" class="nav-register">
-                    Register
+
+                <a href="{{ route('login') }}">Masuk</a>
+
+                <a href="{{ route('register') }}" class="register-link">
+                    Daftar
                 </a>
+
             @endguest
 
             @auth
-                <span class="user-greeting">
-                    Hi, {{ auth()->user()->name }}
+
+                <span class="user-name">
+                    Halo, {{ auth()->user()->name }}
                 </span>
 
                 <form method="POST"
@@ -58,10 +66,11 @@
                       class="inline">
                     @csrf
 
-                    <button type="submit" class="nav-logout">
-                        Logout
+                    <button type="submit" class="logout-button">
+                        Keluar
                     </button>
                 </form>
+
             @endauth
 
         </div>

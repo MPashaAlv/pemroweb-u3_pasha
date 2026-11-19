@@ -1,25 +1,63 @@
+
 @extends('layouts.app')
 
 @section('title', $article->title)
 
 @section('content')
-    <div class="card">
+
+<div class="detail-navigation">
+    <a href="{{ route('home') }}">Beranda</a>
+    <span>/</span>
+    <a href="{{ route('articles.index') }}">Artikel</a>
+    <span>/</span>
+    <span>Detail</span>
+</div>
+
+<article class="detail-article">
+
+    <header class="detail-header">
+
+        <span class="eyebrow">ARTIKEL & INFORMASI</span>
+
         <h1>{{ $article->title }}</h1>
-        <div class="muted" style="font-size: 11px; margin-bottom: 16px;">
-            Dipublikasikan pada {{ $article->created_at->format('d M Y') }} oleh {{ $article->user->name }}
+
+        <div class="detail-meta">
+            <span>Oleh <strong>{{ $article->user->name }}</strong></span>
+            <span>•</span>
+            <span>{{ $article->created_at->format('d F Y') }}</span>
         </div>
 
-        <img src="{{ $article->image ?: 'https://picsum.photos/seed/' . $article->id . '/800/420' }}"
-             alt="{{ $article->title }}"
-             style="width: 100%; max-height: 360px; object-fit: cover; border-radius: 8px; margin-bottom: 18px;">
+    </header>
 
-        <div style="font-size: 14px; color: #334155; white-space: pre-line; margin-bottom: 20px;">{{ $article->body }}</div>
+    <figure class="detail-cover">
+        <img src="{{ $article->image_url }}"
+             alt="Gambar {{ $article->title }}">
+    </figure>
 
-        <div style="font-size: 13px;">
-            <a href="{{ route('home') }}" class="link">← Kembali ke Home</a>
-            @auth
-                | <a href="{{ route('articles.index') }}" class="link">Lihat semua artikel</a>
-            @endauth
-        </div>
+    <div class="detail-body">
+        {!! nl2br(e($article->body)) !!}
     </div>
+
+    <footer class="detail-footer">
+
+        <div>
+            <span class="eyebrow">PENERBIT</span>
+            <p>{{ $article->user->name }}</p>
+        </div>
+
+        @if ($article->user_id === auth()->id())
+            <a href="{{ route('articles.edit', $article) }}"
+               class="button-primary">
+                Edit Artikel
+            </a>
+        @endif
+
+    </footer>
+
+</article>
+
+<div class="detail-back">
+    <a href="{{ route('articles.index') }}">← Kembali ke Daftar Artikel</a>
+</div>
+
 @endsection

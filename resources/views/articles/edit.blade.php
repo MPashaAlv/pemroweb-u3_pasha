@@ -1,42 +1,92 @@
+
 @extends('layouts.app')
 
-@section('title', 'Edit Artikel — Portal Berita Sederhana')
+@section('title', 'Edit Artikel')
 
 @section('content')
-    <div class="card">
-        <h1>Edit Artikel / Berita</h1>
-        <p class="muted" style="font-size: 11px; margin-bottom: 18px;">
-            Perbarui data berita di bawah ini. Kosongkan URL gambar untuk kembali memakai gambar placeholder.
-        </p>
 
-        <form action="{{ route('articles.update', $article) }}" method="POST">
+<section class="form-page">
+
+    <div class="form-heading">
+        <span class="eyebrow">PENGELOLAAN KONTEN</span>
+        <h1>Perbarui Artikel<span>.</span></h1>
+        <p>Perbarui informasi agar artikel tetap relevan.</p>
+    </div>
+
+    <div class="editor-card">
+
+        @if ($errors->any())
+            <div class="form-error">
+                <strong>Periksa kembali formulir:</strong>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('articles.update', $article) }}"
+              method="POST">
             @csrf
             @method('PUT')
 
-            <div class="form-group">
-                <label>Judul Artikel</label>
-                <input type="text" name="title" value="{{ old('title', $article->title) }}" required>
+            <div class="form-field">
+                <label for="title">Judul Artikel</label>
+                <input type="text"
+                       id="title"
+                       name="title"
+                       value="{{ old('title', $article->title) }}"
+                       required>
+                @error('title')
+                    <small class="field-error">{{ $message }}</small>
+                @enderror
             </div>
 
-            <div class="form-group">
-                <label>URL Gambar (opsional)</label>
-                <input type="url" name="image" value="{{ old('image', $article->image) }}" placeholder="https://example.com/gambar.jpg">
+            <div class="form-field">
+                <label for="image">URL Gambar <span>(Opsional)</span></label>
+                <input type="url"
+                       id="image"
+                       name="image"
+                       value="{{ old('image', $article->image) }}"
+                       placeholder="https://example.com/gambar.jpg">
+                <small>Kosongkan jika ingin kembali menggunakan gambar placeholder.</small>
+                @error('image')
+                    <small class="field-error">{{ $message }}</small>
+                @enderror
             </div>
 
-            <div class="form-group">
-                <div class="muted" style="font-size: 11px; margin-bottom: 6px;">Pratinjau gambar saat ini:</div>
-                <img src="{{ $article->image ?: 'https://picsum.photos/seed/' . $article->id . '/800/400' }}"
-                     alt="Pratinjau"
-                     style="width: 340px; max-width: 100%; height: 190px; object-fit: cover; border-radius: 8px;">
+            <div class="current-image">
+                <label>Gambar Saat Ini</label>
+                <img src="{{ $article->image_url }}"
+                     alt="Gambar artikel saat ini">
             </div>
 
-            <div class="form-group">
-                <label>Isi Berita</label>
-                <textarea name="body" rows="6" required>{{ old('body', $article->body) }}</textarea>
+            <div class="form-field">
+                <label for="body">Isi Artikel</label>
+                <textarea id="body"
+                          name="body"
+                          rows="12"
+                          required>{{ old('body', $article->body) }}</textarea>
+                @error('body')
+                    <small class="field-error">{{ $message }}</small>
+                @enderror
             </div>
 
-            <button type="submit" class="btn">Update Artikel</button>
-            <a href="{{ route('articles.index') }}" class="link" style="margin-left: 10px;">Batal</a>
+            <div class="editor-actions">
+                <a href="{{ route('articles.index') }}" class="button-secondary">
+                    Batal
+                </a>
+
+                <button type="submit" class="button-primary">
+                    Simpan Perubahan ↗
+                </button>
+            </div>
+
         </form>
+
     </div>
+
+</section>
+
 @endsection

@@ -1,59 +1,240 @@
+
 @extends('layouts.app')
 
-@section('title', 'Dashboard — Portal Berita Sederhana')
+@section('title', 'Dashboard')
 
 @section('content')
-    <div class="card">
-        <h1>Dashboard</h1>
-        <p style="margin: 0 0 10px;">Selamat datang, <strong>{{ $user->name }}</strong></p>
-        <p class="muted" style="margin: 0; font-size: 11px;">Ini adalah ringkasan singkat aktivitas artikel di aplikasi kamu.</p>
+
+<!-- DASHBOARD HEADING -->
+<section class="dashboard-heading">
+
+    <div>
+        <span class="eyebrow">RUANG KERJA PENULIS</span>
+
+        <h1>Dashboard<span>.</span></h1>
+
+        <p>
+            Selamat datang kembali,
+            <strong>{{ $user->name }}</strong>.
+            Berikut ringkasan aktivitas portal berita kamu.
+        </p>
     </div>
 
-    <div class="card">
-        <h2>Total Artikel</h2>
-        <div style="font-size: 22px; font-weight: 600;">{{ $totalArticles }}</div>
-        <p class="muted" style="margin: 4px 0 0; font-size: 11px;">Jumlah seluruh artikel yang ada di sistem.</p>
+    <a href="{{ route('articles.create') }}" class="button-primary">
+        + Tulis Artikel Baru
+    </a>
+
+</section>
+
+
+<!-- STATISTICS -->
+<section class="dashboard-stats">
+
+    <article class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">TOTAL ARTIKEL</span>
+            <span class="stat-icon">▤</span>
+        </div>
+
+        <h2>{{ $totalArticles }}</h2>
+
+        <p>Seluruh artikel dalam sistem</p>
+    </article>
+
+
+    <article class="stat-card stat-highlight">
+        <div class="stat-top">
+            <span class="stat-label">ARTIKEL KAMU</span>
+            <span class="stat-icon">✎</span>
+        </div>
+
+        <h2>{{ $myArticles }}</h2>
+
+        <p>Artikel yang telah kamu buat</p>
+    </article>
+
+
+    <article class="stat-card">
+        <div class="stat-top">
+            <span class="stat-label">STATUS AKUN</span>
+            <span class="stat-icon">◉</span>
+        </div>
+
+        <h2 class="account-status">Aktif</h2>
+
+        <p>Selamat datang di ruang kerja kamu</p>
+    </article>
+
+</section>
+
+
+<!-- QUICK ACTIONS -->
+<section class="dashboard-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">MANAJEMEN KONTEN</span>
+            <h2>Aksi Cepat</h2>
+        </div>
     </div>
 
-    <div class="card">
-        <h2>Artikel Kamu</h2>
-        <div style="font-size: 22px; font-weight: 600;">{{ $myArticles }}</div>
-        <p class="muted" style="margin: 4px 0 0; font-size: 11px;">Artikel yang dibuat oleh akun kamu.</p>
-    </div>
+    <div class="quick-action-grid">
 
-    <div class="card">
-        <h2>Aksi Cepat</h2>
-        <ul style="margin: 0; padding-left: 20px; line-height: 2;">
-            <li><a href="{{ route('articles.create') }}" class="link">+ Tambah Artikel Baru</a></li>
-            <li><a href="{{ route('articles.index') }}" class="link">Lihat Semua Artikel</a></li>
-            <li><a href="{{ route('home') }}" class="link">Lihat Halaman Home</a></li>
-        </ul>
-    </div>
+        <a href="{{ route('articles.create') }}" class="quick-action">
+            <span class="quick-icon">＋</span>
 
-    <div class="card">
-        <h2>Artikel Terbaru</h2>
-        @forelse ($latestArticles as $item)
-            <div class="article-item" style="padding: 10px;">
-                <img src="{{ $item->image ?: 'https://picsum.photos/seed/' . $item->id . '/300/200' }}" alt="{{ $item->title }}" style="width: 110px; height: 75px;">
-                <div>
-                    <h3 style="font-size: 15px;"><a href="{{ route('articles.show', $item) }}">{{ $item->title }}</a></h3>
-                    <div class="muted" style="font-size: 11px; margin-bottom: 4px;">
-                        oleh {{ $item->user->name }} • {{ $item->created_at->format('d M Y') }}
-                    </div>
-                    <p style="margin: 0; font-size: 12px; color: #334155;">{{ Str::limit($item->body, 100) }}</p>
-                </div>
+            <div>
+                <h3>Tambah Artikel</h3>
+                <p>Publikasikan berita atau informasi baru.</p>
             </div>
-        @empty
-            <p class="muted">Belum ada artikel.</p>
-        @endforelse
+
+            <span class="quick-arrow">↗</span>
+        </a>
+
+
+        <a href="{{ route('articles.index') }}" class="quick-action">
+            <span class="quick-icon">▤</span>
+
+            <div>
+                <h3>Kelola Artikel</h3>
+                <p>Lihat, edit, dan kelola artikel kamu.</p>
+            </div>
+
+            <span class="quick-arrow">↗</span>
+        </a>
+
+
+        <a href="{{ route('home') }}" class="quick-action">
+            <span class="quick-icon">⌂</span>
+
+            <div>
+                <h3>Lihat Homepage</h3>
+                <p>Kunjungi halaman utama portal berita.</p>
+            </div>
+
+            <span class="quick-arrow">↗</span>
+        </a>
+
     </div>
 
-    <div class="card">
-        <h2>Info Akun</h2>
-        <ul style="margin: 0 0 12px; padding-left: 20px; font-size: 14px;">
-            <li><strong>Nama:</strong> {{ $user->name }}</li>
-            <li><strong>Email:</strong> {{ $user->email }}</li>
-        </ul>
-        <p class="muted" style="margin: 0; font-size: 11px;">Gunakan menu di navbar untuk berpindah antara Home, Artikel, dan Dashboard.</p>
+</section>
+
+
+<!-- LATEST ARTICLES -->
+<section class="dashboard-section">
+
+    <div class="section-header">
+        <div>
+            <span class="eyebrow">PEMBARUAN KONTEN</span>
+            <h2>Artikel Terbaru</h2>
+        </div>
+
+        <a href="{{ route('articles.index') }}" class="text-link">
+            Lihat semua ↗
+        </a>
     </div>
+
+
+    <div class="dashboard-articles">
+
+        @if ($latestArticles->isNotEmpty())
+
+            @foreach ($latestArticles as $article)
+
+                <article class="dashboard-article">
+
+                    <a href="{{ route('articles.show', $article) }}"
+                       class="dashboard-article-image">
+
+                        <img
+                            src="{{ $article->image_url }}"
+                            alt="Thumbnail {{ $article->title }}"
+                            loading="lazy"
+                        >
+
+                    </a>
+
+                    <div class="dashboard-article-content">
+
+                        <div class="article-information">
+                            <span>{{ $article->created_at->format('d M Y') }}</span>
+                            <span>•</span>
+                            <span>{{ $article->user->name }}</span>
+                        </div>
+
+                        <h3>
+                            <a href="{{ route('articles.show', $article) }}">
+                                {{ $article->title }}
+                            </a>
+                        </h3>
+
+                        <p>
+                            {{ \Illuminate\Support\Str::limit(
+                                $article->body, 110
+                            ) }}
+                        </p>
+
+                    </div>
+
+                    <a href="{{ route('articles.show', $article) }}"
+                       class="article-open">
+                        ↗
+                    </a>
+
+                </article>
+
+            @endforeach
+
+        @else
+
+            <div class="dashboard-empty">
+                <span>✳</span>
+                <h3>Belum Ada Artikel</h3>
+                <p>Artikel terbaru akan muncul di bagian ini.</p>
+
+                <a href="{{ route('articles.create') }}"
+                   class="button-primary">
+                    Buat Artikel Pertama
+                </a>
+            </div>
+
+        @endif
+
+    </div>
+
+</section>
+
+
+<!-- ACCOUNT INFORMATION -->
+<section class="account-panel">
+
+    <div class="account-heading">
+        <span class="eyebrow">INFORMASI PENGGUNA</span>
+        <h2>Profil Akun</h2>
+    </div>
+
+    <div class="account-details">
+
+        <div class="account-avatar">
+            {{ strtoupper(substr($user->name, 0, 1)) }}
+        </div>
+
+        <div class="account-data">
+            <span class="account-label">NAMA PENGGUNA</span>
+            <h3>{{ $user->name }}</h3>
+
+            <span class="account-label">ALAMAT EMAIL</span>
+            <p>{{ $user->email }}</p>
+        </div>
+
+    </div>
+
+    <p class="account-note">
+        Gunakan menu navigasi untuk berpindah antara halaman Home,
+        Artikel, dan Dashboard.
+    </p>
+
+</section>
+
+
 @endsection
