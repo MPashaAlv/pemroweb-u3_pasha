@@ -1,26 +1,71 @@
-<header>
-    <div class="container nav-inner">
-        <div class="nav-links">
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+
+<header class="site-header">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <span>INDEPENDENT DIGITAL JOURNAL</span>
+
+        <span>{{ now()->translatedFormat('l, d F Y') }}</span>
+    </div>
+
+    <!-- Brand -->
+    <div class="masthead">
+        <a href="{{ route('home') }}" class="brand">
+            THE DAILY<span>.</span>
+        </a>
+
+        <p class="brand-description">
+            STORIES THAT MATTER.
+        </p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+
+        <a href="{{ route('home') }}"
+           class="{{ request()->routeIs('home') ? 'active' : '' }}">
+            Home
+        </a>
+
+        @auth
+            <a href="{{ route('dashboard') }}"
+               class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                Dashboard
+            </a>
+
+            <a href="{{ route('articles.index') }}"
+               class="{{ request()->routeIs('articles.*') ? 'active' : '' }}">
+                Artikel
+            </a>
+        @endauth
+
+        <div class="nav-right">
+
+            @guest
+                <a href="{{ route('login') }}">Login</a>
+                <a href="{{ route('register') }}" class="nav-register">
+                    Register
+                </a>
+            @endguest
+
             @auth
-                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-                <a href="{{ route('articles.index') }}" class="{{ request()->routeIs('articles.*') ? 'active' : '' }}">Artikel</a>
+                <span class="user-greeting">
+                    Hi, {{ auth()->user()->name }}
+                </span>
+
+                <form method="POST"
+                      action="{{ route('logout') }}"
+                      class="inline">
+                    @csrf
+
+                    <button type="submit" class="nav-logout">
+                        Logout
+                    </button>
+                </form>
             @endauth
+
         </div>
 
-        <div class="nav-user">
-            @auth
-                <span>Hi, {{ Auth::user()->name }}</span>
-                <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="btn btn-sm">Logout</button>
-                </form>
-            @else
-                <div class="nav-links">
-                    <a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'active' : '' }}">Login</a>
-                    <a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">Register</a>
-                </div>
-            @endauth
-        </div>
-    </div>
+    </nav>
+
 </header>
